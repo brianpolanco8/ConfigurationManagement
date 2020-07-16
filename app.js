@@ -44,6 +44,12 @@ app.use(bodyParser.json());
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
+
+app.get("/", (req, res, next) => {
+  res.status(200).json({
+    message: "Hello",
+  });
+});
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/feed", feedRoutes);
@@ -58,20 +64,24 @@ app.use((error, req, res, next) => {
   res.status(statusCode).json({ message: message, data: data });
 });
 
-mongoose
-  .connect(
-    "mongodb+srv://brian:jlz88KiWGAXRQ3lJ@cluster0-5nf18.mongodb.net/messages?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-    }
-  )
-  .then((result) => {
-    const server = app.listen(8080);
-    const io = require("./socket").init(server);
-    io.on("connection", (socket) => {
-      console.log("Client connected");
-    });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+// mongoose
+//   .connect(
+//     "mongodb+srv://brian:jlz88KiWGAXRQ3lJ@cluster0-5nf18.mongodb.net/messages?retryWrites=true&w=majority",
+//     {
+//       useNewUrlParser: true,
+//     }
+//   )
+//   .then((result) => {
+//     const server = app.listen(8080);
+//     const io = require("./socket").init(server);
+//     io.on("connection", (socket) => {
+//       console.log("Client connected");
+//     });
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+
+app.listen(80, () => {
+  console.log("Server is running on port 80");
+});
